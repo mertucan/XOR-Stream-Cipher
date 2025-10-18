@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XOR Stream Cipher</title>
+    <link rel="icon" href="{{ url_for('static', filename='img/favicon.png') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="content-wrapper">
+        <div class="container">
+            <h1>XOR Stream Cipher</h1>
+            <form id="cipher-form">
+                <textarea name="text" rows="5" placeholder="Enter text here..."></textarea>
+                <input type="number" name="seed" placeholder="Enter integer seed (key)...">
+                <div class="buttons">
+                    <button type="submit" name="operation" value="encrypt">Encrypt</button>
+                    <button type="submit" name="operation" value="decrypt">Decrypt</button>
+                </div>
+            </form>
+
+            <div id="result-container">
+                <!-- Results and steps will be dynamically inserted here -->
+            </div>
+            
+            <div class="explanation">
+                <h2>Nasıl Çalışır?</h2>
+                <p>Bu araç, bir <strong>XOR Akış Şifreleme</strong> yöntemi kullanır.</p>
+                <ol>
+                    <li><strong>Anahtar Akışı Üretimi:</strong> Girdiğiniz 'seed' (tohum) değeri kullanılarak sözde rastgele sayılardan oluşan bir anahtar akışı üretilir.</li>
+                    <li><strong>Metnin Baytlara Dönüştürülmesi:</strong> Girdiğiniz metin, bilgisayarın anlayabileceği baytlara (byte) çevrilir.</li>
+                    <li><strong>XOR İşlemi:</strong> Metnin her bir baytı, anahtar akışındaki karşılık gelen bayt ile XOR (özel veya) işlemine tabi tutulur. Bu işlem, veriyi şifreler. Şifreyi çözmek için aynı işlem şifreli veriye tekrar uygulanır.</li>
+                    <li><strong>Base64 Kodlama:</strong> Şifrelenmiş veri, internet üzerinden güvenle aktarılabilen ve görüntülenebilen bir metin formatı olan Base64'e dönüştürülür.</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        Created by Mert Uçan
+    </footer>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
