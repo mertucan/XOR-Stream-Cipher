@@ -3,42 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>XOR Stream Cipher</title>
+    <title>XOR Akış Şifreleyici</title>
     <link rel="icon" href="{{ url_for('static', filename='img/favicon.png') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
+    <div class="background-shapes"></div>
     <div class="content-wrapper">
         <div class="container">
-            <h1>XOR Stream Cipher</h1>
+            <div class="header">
+                <h1>XOR Akış Şifreleyici</h1>
+            </div>
+            <p class="subtitle">Metinlerinizi güvenli bir anahtar ile kolayca şifreleyin ve şifresini çözün.</p>
             <form id="cipher-form">
-                <textarea name="text" rows="5" placeholder="Enter text here..."></textarea>
-                <input type="number" name="seed" placeholder="Enter integer seed (key)...">
+                <textarea name="text" rows="5" placeholder="Şifrelenecek veya çözülecek metni buraya girin..."></textarea>
+                <div class="seed-container">
+                    <input type="text" name="seed" placeholder="Güvenlik anahtarını (seed) girin...">
+                    <button type="button" id="generate-seed-btn" title="Rastgele Anahtar Oluştur">
+                        <i class="fas fa-dice"></i>
+                    </button>
+                </div>
                 <div class="buttons">
-                    <button type="submit" name="operation" value="encrypt">Encrypt</button>
-                    <button type="submit" name="operation" value="decrypt">Decrypt</button>
+                    <button type="submit" name="operation" value="encrypt"><i class="fas fa-lock"></i> Şifrele</button>
+                    <button type="submit" name="operation" value="decrypt"><i class="fas fa-unlock"></i> Şifre Çöz</button>
                 </div>
             </form>
 
             <div id="result-container">
-                <!-- Results and steps will be dynamically inserted here -->
+                <!-- Sonuçlar ve adımlar buraya dinamik olarak eklenecek -->
             </div>
             
             <div class="explanation">
                 <h2>Nasıl Çalışır?</h2>
-                <p>Bu araç, bir <strong>XOR Akış Şifreleme</strong> yöntemi kullanır.</p>
+                <p>Bu araç, bir <strong>XOR Akış Şifreleme</strong> (XOR Stream Cipher) algoritması kullanarak çalışır. Temel adımlar şunlardır:</p>
                 <ol>
-                    <li><strong>Anahtar Akışı Üretimi:</strong> Girdiğiniz 'seed' (tohum) değeri kullanılarak sözde rastgele sayılardan oluşan bir anahtar akışı üretilir.</li>
-                    <li><strong>Metnin Baytlara Dönüştürülmesi:</strong> Girdiğiniz metin, bilgisayarın anlayabileceği baytlara (byte) çevrilir.</li>
-                    <li><strong>XOR İşlemi:</strong> Metnin her bir baytı, anahtar akışındaki karşılık gelen bayt ile XOR (özel veya) işlemine tabi tutulur. Bu işlem, veriyi şifreler. Şifreyi çözmek için aynı işlem şifreli veriye tekrar uygulanır.</li>
-                    <li><strong>Base64 Kodlama:</strong> Şifrelenmiş veri, internet üzerinden güvenle aktarılabilen ve görüntülenebilen bir metin formatı olan Base64'e dönüştürülür.</li>
+                    <li><strong>Anahtar Akışı Üretimi:</strong> Girdiğiniz 'güvenlik anahtarı' (seed), SHA-256 ile özetlenerek deterministik bir başlangıç noktası oluşturur. Bu nokta, metninizle aynı uzunlukta sözde rastgele bir bayt dizisi (anahtar akışı) üretmek için kullanılır.</li>
+                    <li><strong>Metnin Baytlara Dönüştürülmesi:</strong> Girdiğiniz metin, bilgisayarın işleyebileceği evrensel bir format olan UTF-8 bayt dizisine çevrilir.</li>
+                    <li><strong>XOR İşlemi:</strong> Metnin her bir baytı, anahtar akışındaki karşılık gelen bayt ile XOR (özel veya) mantıksal işlemine tabi tutulur. Bu işlem, her baytı geri döndürülebilir bir şekilde değiştirir. Şifreyi çözmek için aynı anahtarla aynı XOR işlemi tekrar uygulanır.</li>
+                    <li><strong>Base64 Kodlama:</strong> Şifrelenmiş ikili veri, herhangi bir metin ortamında (örneğin e-posta, web sayfası) güvenle saklanabilen ve taşınabilen bir metin formatı olan Base64'e dönüştürülür.</li>
                 </ol>
+                <p><strong>Önemli:</strong> Aynı anahtar (seed) ile şifrelenen metin, yalnızca aynı anahtar kullanılarak çözülebilir. Anahtarınızı güvende tutun!</p>
             </div>
         </div>
     </div>
 
     <footer>
-        Created by Mert Uçan
+        Mert Uçan tarafından oluşturuldu
     </footer>
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 </body>

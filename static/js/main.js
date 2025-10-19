@@ -1,7 +1,22 @@
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('cipher-form');
-    const buttons = form.querySelectorAll('button');
+    const buttons = form.querySelectorAll('button[type="submit"]');
     const resultContainer = document.getElementById('result-container');
+    const generateSeedBtn = document.getElementById('generate-seed-btn');
+    const seedInput = form.elements.seed;
+
+    generateSeedBtn.addEventListener('click', async () => {
+        try {
+            const response = await fetch('/generate-seed');
+            const data = await response.json();
+            if (data.seed) {
+                seedInput.value = data.seed;
+            }
+        } catch (error) {
+            displayError("Failed to generate a new seed. Please try again.");
+            console.error('Error generating seed:', error);
+        }
+    });
 
     buttons.forEach(button => {
         button.addEventListener('click', async (event) => {
@@ -9,11 +24,11 @@ document.addEventListener('DOMContentLoaded', () => {
             resultContainer.innerHTML = ''; // Clear previous results
 
             const text = form.elements.text.value;
-            const seed = form.elements.seed.value;
+            const seed = seedInput.value;
             const operation = button.value;
 
             if (!text || !seed) {
-                displayError("Please provide both text and a seed.");
+                displayError("Lütfen hem metni hem de güvenlik anahtarını girin.");
                 return;
             }
 
@@ -42,7 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             } catch (error) {
                 resultContainer.innerHTML = ''; // Clear spinner
-                displayError("An unexpected error occurred. See console for details.");
+                displayError("Beklenmedik bir hata oluştu. Ayrıntılar için konsola bakın.");
                 console.error('Error:', error);
             }
         });
@@ -51,7 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function displayError(message) {
         resultContainer.innerHTML = `
             <div class="error">
-                <p><strong>Error:</strong> ${message}</p>
+                <p><strong>Hata:</strong> ${message}</p>
             </div>
         `;
     }
@@ -66,11 +81,12 @@ document.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => {
                 const stepElement = document.createElement('div');
                 stepElement.className = 'step';
-                stepElement.innerHTML = `<p>${step}</p>`;
+                // Simple regex to bold the first part of the step
+                stepElement.innerHTML = `<p>${step.replace(/^([^:]+:)/, '<strong>$1</strong>')}</p>`;
                 stepsContainer.appendChild(stepElement);
                 stepElement.scrollIntoView({ behavior: 'smooth', block: 'end' });
             }, delay);
-            delay += 500; // 0.5 second delay between steps
+            delay += 300; // Faster step delay
         });
 
         // Display the final result after all steps
@@ -78,7 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const resultElement = document.createElement('div');
             resultElement.className = 'result';
             resultElement.innerHTML = `
-                <h2>Final Result:</h2>
+                <h3>Nihai Sonuç:</h3>
                 <p>${finalResult}</p>
             `;
             resultContainer.appendChild(resultElement);
